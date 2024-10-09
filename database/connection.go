@@ -1,36 +1,48 @@
-// database/db.go
 package database
 
 import (
-	"fmt"
+    "fmt"
+    "os"
 
-	"github.com/syahlan1/ecommerce-scrapper.git/models"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+    "github.com/syahlan1/ecommerce-scrapper.git/models"
+    "gorm.io/driver/postgres"
+    "gorm.io/gorm"
 
 )
 
 var DB *gorm.DB
 
 func Connect() {
-	host := "localhost"
-	username := "postgres"
-	password := "password"
-	dbname := "ecommerce"
-	port := "5432"
+    // Cek apakah DATABASE_URL ada di environment (untuk Heroku)
+    databaseURL := os.Getenv("DATABASE_URL")
+    var dsn string
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta", host, username, password, dbname, port)
+    if databaseURL != "" {
+        // Gunakan DATABASE_URL di Heroku
+        dsn = databaseURL
+    } else {
+        // Gunakan koneksi lokal jika DATABASE_URL tidak ada (untuk pengembangan lokal)
+        host := "localhost"
+        username := "postgres"
+        password := "password"
+        dbname := "ecommerce"
+        port := "5432"
 
-	connection, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+        dsn = fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=Asia/Jakarta", host, username, password, dbname, port)
+    }
 
-	if err != nil {
-		panic("Failed to connect to database")
-	}
-	DB = connection
+    // Buka koneksi ke database
+    connection, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+    if err != nil {
+        panic("Failed to connect to database")
+    }
 
-	connection.AutoMigrate(
-		&models.Product{},
-		&models.UserHistory{},
-		&models.User{},
-	)
+    DB = connection
+
+    // Migrasi model
+    connection.AutoMigrate(
+        &models.Product{},
+        &models.UserHistory{},
+        &models.User{},
+    )
 }
