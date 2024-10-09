@@ -1,3 +1,3 @@
-web: ./bin/ecommerce-scrapper
+web: ecommerce-scrapper
 
 go run .
