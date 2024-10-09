@@ -1,3 +1,3 @@
-web: ecommerce-scrapper
+web: ./
 
 go run .
