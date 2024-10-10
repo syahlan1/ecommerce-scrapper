@@ -1,1 +1,1 @@
-web: go build -o ecommerce-scrapper && ./ecommerce-scrapper
+web: bin/ecommerce-scrapper
