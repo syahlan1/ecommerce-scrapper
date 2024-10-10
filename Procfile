@@ -1,1 +1,1 @@
-web: bin/ecommerce-scrapper
+web: go run .
