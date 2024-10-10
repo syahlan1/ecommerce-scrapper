@@ -1,1 +1,1 @@
-web: ./ecommerce-scrapper.git
+web: bin/ecommerce-scrapper
